@@ -46,11 +46,11 @@ train_size = int(0.8 * len(dataset))  # 80% of data for training
 test_size = len(dataset) - train_size
 train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
-class_names = list(set([class_name for _, class_name in train_dataset]))
-print(class_names)
+#class_names = list(set([class_name for _, class_name in train_dataset]))
+#print(class_names)
 #after obtain the datasets, create the model
 # Path to save the model
-model_path = 'DogNet.pth'
+model_path = 'dog_classifier.pth'
 if os.path.exists(model_path):
     print("El modelo existe.")
     model = DogClassifier()
