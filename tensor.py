@@ -55,6 +55,8 @@ if os.path.exists(model_path):
     print("El modelo existe.")
     model = DogClassifier()
     model.load_state_dict(torch.load(model_path))
+    if torch.cuda.is_available():
+        model = model.to('cuda')
 else:
     print("El modelo no existe.")
     model_path = './dog_classifier.pth'
