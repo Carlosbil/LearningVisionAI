@@ -73,9 +73,8 @@ train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 # Define a number of training epochs
 epochs = 10
 
-
-
-
+#actually is my best
+best_loss =  0.0001727
 # Training loop
 for epoch in range(epochs):
     running_loss = 0.0
@@ -97,8 +96,31 @@ for epoch in range(epochs):
         # Print loss statistics
         running_loss += loss.item()
         if i % 200 == 199:    # Print every 200 mini-batches
-            print('[Epoch %d, Batch %5d] Loss: %.3f' % (epoch + 1, i + 1, running_loss / 200))
+            average_loss = running_loss / 200
+            print('[Epoch %d, Batch %5d] Loss: %.7f' % (epoch + 1, i + 1, average_loss))
+            running_loss = 0.0
+            if average_loss < best_loss:
+                print('New best model found and saved!')
+                best_loss = average_loss
+                torch.save(model.state_dict(), model_path)    
             running_loss = 0.0
 
-    # Save the model after each epoch
-    torch.save(model.state_dict(), model_path)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+
+correct = 0
+total = 0
+
+# No need to track gradients for testing, so we use torch.no_grad()
+with torch.no_grad():
+    for images, labels in test_loader:
+        if torch.cuda.is_available():
+            images = images.to('cuda')
+            labels = labels.to('cuda')
+        
+        # Forward pass
+        outputs = model(images)
+        predicted = outputs.round()  # Rounds the output to 0/1
+        total += labels.size(0)
+        correct += (predicted == labels.unsqueeze(1)).sum().item()
+
+print('Accuracy of the network on test images: %d %%' % (100 * correct / total))
