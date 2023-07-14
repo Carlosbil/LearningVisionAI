@@ -25,6 +25,7 @@ transform = Compose([
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    model.eval()
     if 'file' not in request.files:
         return 'No file part', 400
     file = request.files['file']

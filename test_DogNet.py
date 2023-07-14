@@ -24,20 +24,22 @@ def load_image(image_path):
     return image
 
 def get_random_image_paths(root_path, num_images):
-    all_image_paths = glob.glob(root_path + "*.jpg")
+    all_image_paths = glob.glob(root_path + "*/*.jpg")
     return random.sample(all_image_paths, num_images)
 
 def predict_and_display_images():
-    image_paths = get_random_image_paths('./dataset/dogs/images/', 9)
+    image_paths = get_random_image_paths('./dataset',2)
 
     model_path = 'dog_classifier.pth'
     if os.path.exists(model_path):
         print("El modelo existe.")
         model = DogClassifier()
         model.load_state_dict(torch.load(model_path))
+        model.eval()
         if torch.cuda.is_available():
             print("Modelo en CUDA")
             model = model.to('cuda')
+            
 
     # Load, predict and plot each image
     fig, axes = plt.subplots(3, 3, figsize=(10,10))
@@ -55,4 +57,5 @@ def predict_and_display_images():
     plt.show()
 
 predict_and_display_images()
+
 
