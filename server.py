@@ -3,7 +3,11 @@ from PIL import Image
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 import torch
 from DogNet import DogClassifier
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)  # Habilita CORS para todas las rutas de la aplicación
+
 
 # Load your trained model
 model = DogClassifier()

@@ -24,14 +24,14 @@ transform = transforms.Compose([
 ])
 
 def target_transform_cifar(target):
-    # Asignar todas las etiquetas como 2
-    return 1
-def target_transform_dogs(target):
-    # Asignar todas las etiquetas como 2
+    # All no dogs images are label 0
     return 0
+def target_transform_dogs(target):
+    # All dog images are label 1
+    return 1
 
 # Loading Stanford Dogs dataset
-dogs_dataset = datasets.ImageFolder('./dataset/dogs/images', transform=transform, target_transform=target_transform_dogs)
+dogs_dataset = datasets.ImageFolder('./dataset/dogs/images/images', transform=transform, target_transform=target_transform_dogs)
 
 # Loading CIFAR-100 dataset
 data_dir = './dataset/no_dogs/images/'
@@ -65,16 +65,16 @@ else:
         model = model.to('cuda')
 
 criterion = nn.BCELoss()  # Binary Cross-Entropy loss
-optimizer = torch.optim.SGD(model.parameters(), lr=0.01)  # Stochastic Gradient Descent optimizer
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001)  # Stochastic Gradient Descent optimizer
 
 # Define a loader for the training data
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 
 # Define a number of training epochs
-epochs = 10
+epochs = 30
 
 #actually is my best
-best_loss =  0.0001727
+best_loss =  0.2485753
 # Training loop
 for epoch in range(epochs):
     running_loss = 0.0
@@ -105,7 +105,7 @@ for epoch in range(epochs):
                 torch.save(model.state_dict(), model_path)    
             running_loss = 0.0
 
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=True)
 
 correct = 0
 total = 0
