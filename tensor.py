@@ -92,8 +92,8 @@ for epoch in range(epochs):
         running_loss += loss.item()
         # Print loss every 200 batches
         if i % 100 == 0:
-            average_loss = running_loss / 200
-            print('[Epoch %d, Batch %5d] Loss: %.7f' % (epoch + 1, i + 1, average_loss))
+            average_loss = running_loss / 100
+            print('[Epoch %d, Batch %5d] Loss: %.7f' % (epoch + 1, i, average_loss))
             # Check if this is the best model so far
             if average_loss < best_loss:
                 print('New best model found and saved!')
