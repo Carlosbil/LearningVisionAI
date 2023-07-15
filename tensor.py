@@ -22,15 +22,14 @@ def target_transform_dogs(target):
 
 # Loading Stanford Dogs dataset
 dogs_dataset = datasets.ImageFolder('./dataset/dogs/images', transform=transform, target_transform=target_transform_dogs)
-num_samples_dogs = min(len(dogs_dataset), 10000)
-dogs_dataset = torch.utils.data.Subset(dogs_dataset, indices=range(num_samples_dogs))
+num_samples = len(dogs_dataset)
+dogs_dataset = torch.utils.data.Subset(dogs_dataset, indices=range(num_samples))
 
 # Loading CIFAR-100 dataset
 data_dir = './dataset/no_dogs/images/'
 # Download and load CIFAR-100 dataset
 cifar_dataset = datasets.CIFAR100(root=data_dir, download=True, transform=transform, target_transform=target_transform_cifar)
-num_samples_cifar = min(len(cifar_dataset), 10000)
-cifar_dataset = torch.utils.data.Subset(cifar_dataset, indices=range(num_samples_cifar))
+cifar_dataset = torch.utils.data.Subset(cifar_dataset, indices=range(num_samples))
 
 # Concatenate both datasets
 dataset = torch.utils.data.ConcatDataset([dogs_dataset, cifar_dataset])
@@ -59,14 +58,14 @@ criterion = nn.BCELoss()  # Binary Cross-Entropy loss
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)  # Adam optimizer
 
 # Define a loader for the training data
-train_loader = DataLoader(train_dataset, batch_size=50, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=50, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
 
 # Define a number of training epochs
 epochs = 10
 
 #actually is my best
-best_loss =  0.5
+best_loss = 0.0093519
 # Training loop
 for epoch in range(epochs):
     running_loss = 0.0
@@ -90,9 +89,9 @@ for epoch in range(epochs):
         
         # Update training loss
         running_loss += loss.item()
-        # Print loss every 200 batches
-        if i % 100 == 0:
-            average_loss = running_loss / 100
+
+        if i != 0 and i % 62 == 0:
+            average_loss = running_loss / 62
             print('[Epoch %d, Batch %5d] Loss: %.7f' % (epoch + 1, i, average_loss))
             # Check if this is the best model so far
             if average_loss < best_loss:

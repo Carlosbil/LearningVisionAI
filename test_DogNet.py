@@ -2,6 +2,10 @@ from PIL import Image
 import torch,os
 from torchvision import transforms
 from DogNet import DogClassifier
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+import glob
 
 transform = transforms.Compose([
     transforms.Resize((64,64)),  # Resizes the image to 64x64
@@ -10,11 +14,7 @@ transform = transforms.Compose([
 ])
 
   
-from PIL import Image
-import matplotlib.pyplot as plt
-import numpy as np
-import random
-import glob
+
 
 def load_image(image_path):
     image = Image.open(image_path)

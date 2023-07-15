@@ -4,10 +4,10 @@ from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 import torch
 from DogNet import DogClassifier
 from flask_cors import CORS
+from torchvision import datasets, transforms
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para todas las rutas de la aplicación
-
 
 # Load your trained model
 model = DogClassifier()
@@ -17,10 +17,10 @@ model.eval()
 if torch.cuda.is_available():
     model = model.to('cuda')
 
-transform = Compose([
-    Resize((64,64)),  # Resizes the image to 64x64
-    ToTensor(),  # Converts the image into a tensor
-    Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalizes the tensors (mean and std deviation for 3 color channels)
+transform = transforms.Compose([
+    transforms.Resize((64, 64)),  # Resizes the image to 64x64
+    transforms.ToTensor(),  # Converts the image into a tensor
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalizes the tensors (mean and std deviation for 3 color channels)
 ])
 
 @app.route('/predict', methods=['POST'])
@@ -28,19 +28,22 @@ def predict():
     model.eval()
     if 'file' not in request.files:
         return 'No file part', 400
+
     file = request.files['file']
     image = Image.open(file)
+
+    # Apply the image transformation
     image_tensor = transform(image).unsqueeze(0)
-    
+
     if torch.cuda.is_available():
         image_tensor = image_tensor.to('cuda')
-    
+
     with torch.no_grad():
         output = model(image_tensor)
         prediction = output.round()
 
     result = {
-        'prediction': 'dog' if prediction.item() == 0 else 'not a dog'
+        'prediction': 'dog' if prediction.item() == 1 else 'not a dog'
     }
 
     return jsonify(result)
