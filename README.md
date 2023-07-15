@@ -11,7 +11,7 @@ This project uses a convolutional neural network (CNN) implemented in PyTorch to
 ## Project Structure
 
 - `DogNet.py` - Defines the CNN architecture used for the dog classifier.
-- `train.py` - Trains the dog classifier using PyTorch and saves the trained model.
+- `tensor.py` - Trains the dog classifier using PyTorch and saves the trained model.
 - `server.py`- Allows an endpoint for predict images and return the predict result
 - `test_DogNet.py` - Allows to introduce any folder path with images and display the images with the result (max 9 images per run)
 - `app.py` - Defines the Flask web server that uses the trained model to classify uploaded images.
